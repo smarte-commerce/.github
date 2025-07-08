@@ -2,18 +2,31 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen" alt="Spring Boot 3.x"/>
+  <img src="https://img.shields.io/badge/Spring%20Cloud-2023.x-6DB33F" alt="Spring Cloud 2023.x"/>
   <img src="https://img.shields.io/badge/Java-21-blue" alt="Java 21"/>
   <img src="https://img.shields.io/badge/PostgreSQL-Latest-blue" alt="PostgreSQL"/>
   <img src="https://img.shields.io/badge/CockroachDB-Latest-blue" alt="CockroachDB"/>
   <img src="https://img.shields.io/badge/Redis-Latest-red" alt="Redis"/>
+  <img src="https://img.shields.io/badge/Kafka-Latest-231F20" alt="Kafka"/>
+  <img src="https://img.shields.io/badge/Elasticsearch-8.x-005571" alt="Elasticsearch"/>
   <img src="https://img.shields.io/badge/Docker-Ready-blue" alt="Docker Ready"/>
+  <img src="https://img.shields.io/badge/Kubernetes-Ready-326CE5" alt="Kubernetes Ready"/>
   <img src="https://img.shields.io/badge/Microservices-Architecture-orange" alt="Microservices Architecture"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Eureka-Service%20Discovery-2D84C8" alt="Eureka"/>
+  <img src="https://img.shields.io/badge/Gateway-API%20Routing-6DB33F" alt="Gateway"/>
+  <img src="https://img.shields.io/badge/Config-Centralized%20Config-6DB33F" alt="Config"/>
+  <img src="https://img.shields.io/badge/Resilience4j-Circuit%20Breaking-3B5998" alt="Resilience4j"/>
+  <img src="https://img.shields.io/badge/RabbitMQ-Message%20Broker-FF6600" alt="RabbitMQ"/>
 </p>
 
 ## 📌 Table of Contents
 
 - [Overview](#overview)
 - [Architecture](#architecture)
+- [Spring Cloud Architecture](#spring-cloud-architecture)
 - [Key Features](#key-features)
 - [Services](#services)
   - [Authentication Service](#authentication-service)
@@ -112,6 +125,145 @@ graph TB
     Orchestrator --> Kafka
     Orchestrator --> RabbitMQ
 ```
+
+## Spring Cloud Architecture
+
+The platform leverages Spring Cloud's comprehensive suite of tools for building cloud-native applications. The diagram below illustrates how Spring Cloud components integrate with our microservices:
+
+```mermaid
+flowchart TD
+    subgraph "Spring Cloud Components"
+        direction TB
+        Config["Spring Cloud Config<br/>Centralized Configuration"]
+        Eureka["Netflix Eureka<br/>Service Discovery"]
+        Gateway["Spring Cloud Gateway<br/>API Gateway"]
+        Resilience["Resilience4j<br/>Circuit Breaking"]
+        Bus["Spring Cloud Bus<br/>Config Refresh"]
+        LoadBalancer["Spring Cloud LoadBalancer<br/>Client-side Load Balancing"]
+        Stream["Spring Cloud Stream<br/>Event Streaming"]
+    end
+    
+    subgraph "Core Services"
+        direction TB
+        Auth["Authentication Service"]
+        Product["Product Service"]
+        Cart["Cart Service"]
+        Order["Order Service"]
+        Payment["Payment Service"]
+        Shipping["Shipping Service"]
+        Promotion["Promotion Service"]
+        Assistant["Shopping Assistant"]
+    end
+    
+    subgraph "Infrastructure"
+        direction TB
+        Kafka["Apache Kafka"]
+        RabbitMQ["RabbitMQ"]
+        Redis["Redis Cache"]
+        CockroachDB["CockroachDB"]
+        Elasticsearch["Elasticsearch"]
+    end
+    
+    Client["Client Applications"] --> Gateway
+    Gateway --> Eureka
+    Gateway --> Auth
+    Gateway --> Product
+    Gateway --> Cart
+    Gateway --> Order
+    Gateway --> Payment
+    Gateway --> Shipping
+    Gateway --> Promotion
+    Gateway --> Assistant
+    
+    Auth --> Eureka
+    Product --> Eureka
+    Cart --> Eureka
+    Order --> Eureka
+    Payment --> Eureka
+    Shipping --> Eureka
+    Promotion --> Eureka
+    Assistant --> Eureka
+    
+    Auth --> Config
+    Product --> Config
+    Cart --> Config
+    Order --> Config
+    Payment --> Config
+    Shipping --> Config
+    Promotion --> Config
+    Assistant --> Config
+    
+    Config --> Bus
+    Bus --> Auth
+    Bus --> Product
+    Bus --> Cart
+    Bus --> Order
+    Bus --> Payment
+    Bus --> Shipping
+    Bus --> Promotion
+    Bus --> Assistant
+    
+    Product --> Elasticsearch
+    Order --> Kafka
+    Cart --> Redis
+    Promotion --> Redis
+    Order --> CockroachDB
+    Payment --> CockroachDB
+    Shipping --> RabbitMQ
+    
+    Auth --> Resilience
+    Product --> Resilience
+    Cart --> Resilience
+    Order --> Resilience
+    Payment --> Resilience
+    Shipping --> Resilience
+    Promotion --> Resilience
+    Assistant --> Resilience
+    
+    Auth --> LoadBalancer
+    Product --> LoadBalancer
+    Cart --> LoadBalancer
+    Order --> LoadBalancer
+    Payment --> LoadBalancer
+    Shipping --> LoadBalancer
+    Promotion --> LoadBalancer
+    Assistant --> LoadBalancer
+    
+    Order --> Stream
+    Payment --> Stream
+    Shipping --> Stream
+    Promotion --> Stream
+```
+
+### Spring Cloud Components
+
+Our platform utilizes the following Spring Cloud components:
+
+1. **Spring Cloud Config**: Centralized configuration management for all microservices, backed by a Git repository. Enables dynamic configuration updates without service restarts.
+
+2. **Netflix Eureka**: Service discovery and registration, allowing services to find and communicate with each other without hardcoded URLs.
+
+3. **Spring Cloud Gateway**: API gateway that routes requests to appropriate services, handles cross-cutting concerns like authentication, rate limiting, and circuit breaking.
+
+4. **Resilience4j**: Fault tolerance library that implements circuit breaker, rate limiter, retry, and bulkhead patterns to improve system resilience.
+
+5. **Spring Cloud Bus**: Event bus that enables configuration changes to propagate to all services in real-time.
+
+6. **Spring Cloud LoadBalancer**: Client-side load balancing for service-to-service communication.
+
+7. **Spring Cloud Stream**: Framework for building event-driven microservices connected with shared messaging systems.
+
+### Integration with Core Services
+
+Each microservice in our platform integrates with multiple Spring Cloud components:
+
+- **All services** register with Eureka for service discovery
+- **All services** fetch configuration from Spring Cloud Config
+- **All services** implement Resilience4j patterns for fault tolerance
+- **Event-driven services** (Order, Payment, Shipping) use Spring Cloud Stream for messaging
+- **API Gateway** routes all client requests to appropriate services
+
+This architecture provides a robust foundation for building scalable, resilient, and maintainable microservices.
 
 ## Key Features
 
