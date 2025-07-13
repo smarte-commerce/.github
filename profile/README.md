@@ -1,4 +1,4 @@
-# Microservice E-commerce Platform
+# Microservice Global E-commerce Platform
 
 <p align="center">
   <img src="https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen" alt="Spring Boot 3.x"/>
