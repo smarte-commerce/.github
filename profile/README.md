@@ -1,5 +1,4 @@
-# Microservice Global E-commerce Platform 
-### Regional Partition
+# Microservice Global E-commerce Platform (Regional Partition)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen" alt="Spring Boot 3.x"/>
